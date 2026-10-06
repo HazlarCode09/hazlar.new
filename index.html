@@ -20,11 +20,79 @@
             --border: #e8e4d9;
         }
         
+        html { scroll-behavior: smooth; }
+        
         body {
-            font-family: Georgia, serif;
+            font-family: Georgia, 'Times New Roman', serif;
             color: var(--text);
             background: var(--bg);
-            line-height: 1.7;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        
+        /* ============ PRELOADER ============ */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s, visibility 0.6s;
+        }
+        
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .preloader-text {
+            font-size: 28px;
+            color: var(--primary);
+            letter-spacing: 8px;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        /* ============ SCROLL PROGRESS ============ */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--gold));
+            z-index: 9998;
+            width: 0;
+            transition: width 0.1s;
+        }
+        
+        /* ============ CUSTOM CURSOR ============ */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9997;
+            transition: transform 0.15s, background 0.3s;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+        
+        .cursor.hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            background: var(--gold);
+        }
+        
+        @media (max-width: 768px) {
+            .cursor { display: none; }
         }
         
         /* ============ NAVBAR ============ */
@@ -36,7 +104,13 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             z-index: 1000;
-            padding: 15px 0;
+            padding: 18px 0;
+            transition: all 0.3s;
+        }
+        
+        nav.scrolled {
+            padding: 12px 0;
+            box-shadow: 0 4px 20px rgba(26, 77, 46, 0.08);
         }
         
         .nav-container {
@@ -49,34 +123,82 @@
         }
         
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
             font-size: 18px;
             font-weight: bold;
             color: var(--primary);
+            letter-spacing: 3px;
             cursor: pointer;
         }
         
-        .logo img {
-            height: 40px;
+        .logo span {
+            color: var(--gold);
         }
         
         .nav-menu {
             display: flex;
-            gap: 25px;
+            gap: 30px;
             list-style: none;
         }
         
         .nav-menu a {
             color: var(--text);
             text-decoration: none;
-            font-size: 15px;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             cursor: pointer;
+            position: relative;
+            padding-bottom: 5px;
         }
         
-        .nav-menu a:hover {
-            color: var(--gold);
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+        
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+        
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--primary);
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
         }
         
         /* ============ HERO ============ */
@@ -87,58 +209,156 @@
             justify-content: center;
             text-align: center;
             padding: 100px 20px 60px;
-            background: linear-gradient(135deg, #fafaf7 0%, #f0f5f0 100%);
             position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fafaf7 0%, #f0f5f0 100%);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 300px;
+            height: 300px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: rotate 20s linear infinite;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            right: 10%;
+            width: 200px;
+            height: 200px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: rotate 15s linear infinite reverse;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         
         .hero-content {
-            max-width: 800px;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
         }
         
-        .hero img {
-            height: 120px;
-            margin-bottom: 30px;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .hero .eyebrow {
+            font-size: 13px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 25px;
+            opacity: 0;
+            animation: fadeUp 1s 0.3s forwards;
         }
         
         .hero h1 {
-            font-size: 48px;
+            font-size: 72px;
             color: var(--primary);
-            margin-bottom: 20px;
-            letter-spacing: 3px;
+            margin-bottom: 25px;
+            letter-spacing: 8px;
+            line-height: 1.1;
+            opacity: 0;
+            animation: fadeUp 1s 0.5s forwards;
         }
         
-        .hero p {
-            font-size: 20px;
+        .hero .tagline {
+            font-size: 22px;
             color: var(--text-light);
-            margin-bottom: 40px;
             font-style: italic;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeUp 1s 0.7s forwards;
         }
         
-        .hero .services {
+        .hero .services-text {
             font-size: 14px;
-            color: var(--gold);
-            letter-spacing: 3px;
+            color: var(--primary-light);
+            letter-spacing: 4px;
             text-transform: uppercase;
-            margin-bottom: 40px;
+            margin-bottom: 45px;
+            opacity: 0;
+            animation: fadeUp 1s 0.9s forwards;
+        }
+        
+        .hero .typing {
+            min-height: 30px;
+            font-size: 16px;
+            color: var(--gold);
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeUp 1s 1.1s forwards;
+        }
+        
+        .hero .typing::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 1s 1.3s forwards;
         }
         
         .btn {
-            padding: 15px 35px;
+            padding: 16px 40px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 13px;
             display: inline-block;
             cursor: pointer;
-            border: 2px solid var(--primary);
-            transition: all 0.3s;
+            border: 1px solid var(--primary);
+            transition: all 0.4s;
             font-family: Georgia, serif;
-            letter-spacing: 1px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: transparent;
+            color: var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            transition: left 0.4s;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            left: 0;
+        }
+        
+        .btn:hover {
+            color: white;
         }
         
         .btn-primary {
@@ -146,185 +366,311 @@
             color: white;
         }
         
+        .btn-primary::before {
+            background: var(--gold);
+        }
+        
         .btn-primary:hover {
-            background: var(--primary-light);
-            border-color: var(--primary-light);
+            border-color: var(--gold);
         }
         
-        .btn-outline {
-            background: transparent;
-            color: var(--primary);
-            margin-left: 10px;
+        /* ============ SCROLL INDICATOR ============ */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: bounce 2s infinite;
         }
         
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
+        .scroll-indicator .line {
+            width: 1px;
+            height: 40px;
+            background: var(--gold);
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
         }
         
         /* ============ SECTION ============ */
         section {
-            padding: 80px 20px;
-            max-width: 1100px;
+            padding: 100px 20px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         
-        .section-title {
-            font-size: 36px;
+        .section-header {
             text-align: center;
+            margin-bottom: 70px;
+        }
+        
+        .section-eyebrow {
+            font-size: 12px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold);
             margin-bottom: 15px;
+        }
+        
+        .section-title {
+            font-size: 42px;
             color: var(--primary);
+            letter-spacing: 3px;
+            margin-bottom: 15px;
         }
         
         .section-subtitle {
-            text-align: center;
             color: var(--text-light);
-            margin-bottom: 50px;
             font-style: italic;
+            font-size: 17px;
         }
         
         /* ============ ABOUT ============ */
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 40px;
-            align-items: center;
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
         }
         
-        .about-image {
-            border-radius: 10px;
-            overflow: hidden;
+        .about-content p {
+            font-size: 19px;
+            color: var(--text);
+            margin-bottom: 25px;
+            line-height: 1.9;
         }
         
-        .about-image img {
-            width: 100%;
-            display: block;
-        }
-        
-        .about-text h3 {
+        .about-content .quote {
             font-size: 24px;
+            font-style: italic;
             color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .about-text p {
-            color: var(--text-light);
-            margin-bottom: 15px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--gold);
         }
         
         /* ============ SERVICES ============ */
-        .services-bg {
+        .services-section {
             background: linear-gradient(135deg, #f0f5f0 0%, #fafaf7 100%);
-            padding: 80px 20px;
         }
         
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            max-width: 1100px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
         }
         
         .service-card {
             background: var(--bg-card);
-            border-radius: 10px;
-            border: 1px solid var(--border);
+            padding: 50px 35px;
+            transition: all 0.4s;
+            cursor: pointer;
+            position: relative;
             overflow: hidden;
-            transition: all 0.3s;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+        
+        .service-card:hover::before {
+            transform: scaleX(1);
         }
         
         .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(26, 77, 46, 0.1);
-            border-color: var(--gold);
+            background: var(--bg);
         }
         
-        .service-card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
+        .service-number {
+            font-size: 48px;
+            color: var(--gold);
+            opacity: 0.3;
+            font-style: italic;
+            margin-bottom: 20px;
+            transition: opacity 0.4s;
         }
         
-        .service-content {
-            padding: 25px;
+        .service-card:hover .service-number {
+            opacity: 1;
         }
         
-        .service-content h3 {
-            font-size: 20px;
+        .service-card h3 {
+            font-size: 24px;
             color: var(--primary);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
         }
         
-        .service-content p {
+        .service-card p {
             color: var(--text-light);
             font-size: 15px;
+            line-height: 1.8;
         }
         
-        /* ============ GALLERY ============ */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .gallery-item {
-            height: 200px;
-            overflow: hidden;
-            border-radius: 10px;
-        }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        
-        .gallery-item:hover img {
-            transform: scale(1.1);
-        }
-        
-        /* ============ CONTACT ============ */
-        .contact {
-            background: var(--primary);
-            border-radius: 15px;
-            padding: 60px 30px;
+        /* ============ QUOTES ============ */
+        .quotes-section {
             text-align: center;
-            color: white;
-            max-width: 700px;
+            padding: 60px 20px;
+            max-width: 800px;
             margin: 0 auto;
         }
         
-        .contact h2 {
-            font-size: 32px;
-            margin-bottom: 15px;
-            color: white;
+        .quote-display {
+            font-size: 28px;
+            font-style: italic;
+            color: var(--primary);
+            line-height: 1.6;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s;
         }
         
-        .contact p {
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 30px;
+        .quote-author {
+            margin-top: 25px;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+        
+        /* ============ STATS ============ */
+        .stats-section {
+            background: var(--primary);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .stat-number {
+            font-size: 56px;
+            color: var(--gold);
+            font-weight: bold;
+            display: block;
+            line-height: 1;
+            margin-bottom: 15px;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        /* ============ FAQ ============ */
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .faq-question {
+            padding: 30px 0;
+            font-size: 20px;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .faq-question:hover {
+            color: var(--gold);
+        }
+        
+        .faq-question::after {
+            content: '+';
+            font-size: 28px;
+            color: var(--gold);
+            transition: transform 0.4s;
+            font-weight: 300;
+        }
+        
+        .faq-item.open .faq-question::after {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s;
+            color: var(--text-light);
+            font-size: 16px;
+            line-height: 1.9;
+        }
+        
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+            padding-bottom: 30px;
+        }
+        
+        /* ============ CONTACT ============ */
+        .contact-section {
+            text-align: center;
+            background: linear-gradient(135deg, #f0f5f0 0%, #fafaf7 100%);
+        }
+        
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .contact-content p {
+            font-size: 19px;
+            color: var(--text-light);
+            margin-bottom: 40px;
         }
         
         .contact-info {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 20px;
+            margin-bottom: 45px;
         }
         
-        .contact-info a {
-            color: var(--gold-light);
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .contact .btn-primary {
-            background: var(--gold);
-            border-color: var(--gold);
+        .contact-item {
+            font-size: 20px;
             color: var(--primary);
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        
+        .contact-item:hover {
+            color: var(--gold);
         }
         
         /* ============ FOOTER ============ */
@@ -332,13 +678,13 @@
             background: var(--primary);
             color: white;
             text-align: center;
-            padding: 30px 20px;
-            margin-top: 60px;
+            padding: 40px 20px;
         }
         
         footer p {
-            color: rgba(255,255,255,0.7);
-            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            letter-spacing: 2px;
         }
         
         /* ============ WA FLOAT ============ */
@@ -354,154 +700,483 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 26px;
             text-decoration: none;
             box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
             z-index: 999;
+            transition: transform 0.3s;
+        }
+        
+        .wa-float:hover {
+            transform: scale(1.1);
+        }
+        
+        /* ============ BACK TO TOP ============ */
+        .back-to-top {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            font-size: 18px;
+            z-index: 999;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: var(--gold);
+        }
+        
+        /* ============ FADE IN ============ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         /* ============ RESPONSIVE ============ */
         @media (max-width: 768px) {
-            .nav-menu { display: none; }
-            .hero h1 { font-size: 32px; }
-            .about-grid { grid-template-columns: 1fr; }
-            .section-title { font-size: 28px; }
-            .btn-outline { margin-left: 0; margin-top: 10px; }
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: var(--bg);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 35px;
+                transition: right 0.4s;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu a {
+                font-size: 18px;
+            }
+            
+            .hamburger {
+                display: flex;
+                z-index: 1001;
+            }
+            
+            .hero h1 { font-size: 42px; letter-spacing: 4px; }
+            .hero .tagline { font-size: 17px; }
+            .section-title { font-size: 30px; }
+            .section-eyebrow { font-size: 11px; letter-spacing: 3px; }
+            .quote-display { font-size: 20px; }
+            .stat-number { font-size: 42px; }
+            .about-content p { font-size: 17px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-text">HAZLAR SPACE</div>
+    </div>
+
+    <!-- SCROLL PROGRESS -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="cursor" id="cursor"></div>
+
     <!-- NAVBAR -->
-    <nav>
+    <nav id="navbar">
         <div class="nav-container">
             <div class="logo" onclick="scrollToSection('home')">
-                <img src="https://i.ibb.co.com/MDvSy1xK/file-00000000146c81fab01436f33e07c8ee.png" alt="Logo">
-                HAZLAR SPACE
+                HAZLAR <span>SPACE</span>
             </div>
-            <ul class="nav-menu">
-                <li><a onclick="scrollToSection('home')">Home</a></li>
-                <li><a onclick="scrollToSection('about')">Tentang</a></li>
-                <li><a onclick="scrollToSection('services')">Jasa</a></li>
-                <li><a onclick="scrollToSection('gallery')">Galeri</a></li>
-                <li><a onclick="scrollToSection('contact')">Kontak</a></li>
+            <ul class="nav-menu" id="navMenu">
+                <li><a onclick="scrollToSection('home')" data-section="home">Home</a></li>
+                <li><a onclick="scrollToSection('about')" data-section="about">Tentang</a></li>
+                <li><a onclick="scrollToSection('services')" data-section="services">Jasa</a></li>
+                <li><a onclick="scrollToSection('faq')" data-section="faq">FAQ</a></li>
+                <li><a onclick="scrollToSection('contact')" data-section="contact">Kontak</a></li>
             </ul>
+            <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
     <!-- HERO -->
     <section class="hero" id="home">
         <div class="hero-content">
-            <img src="https://i.ibb.co.com/MDvSy1xK/file-00000000146c81fab01436f33e07c8ee.png" alt="Hazlar Space">
+            <p class="eyebrow">Penulis Lepas</p>
             <h1>HAZLAR SPACE</h1>
-            <p>Penulis Lepas Profesional</p>
-            <p class="services">Artikel • Novel • Cerpen • Esai • Puisi</p>
-            <a class="btn btn-primary" href="https://wa.me/6281395067724" target="_blank">📱 Hubungi Saya</a>
-            <a class="btn btn-outline" onclick="scrollToSection('services')">Lihat Jasa</a>
+            <p class="tagline">"Good stories make a better world."</p>
+            <p class="services-text">Artikel • Novel • Cerpen • Esai • Puisi</p>
+            <p class="typing" id="typing"></p>
+            <div class="hero-cta">
+                <a class="btn btn-primary" href="https://wa.me/6281395067724" target="_blank">Hubungi Saya</a>
+                <a class="btn" onclick="scrollToSection('services')">Lihat Jasa</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="line"></div>
         </div>
     </section>
 
     <!-- ABOUT -->
     <section id="about">
-        <h2 class="section-title">Tentang Saya</h2>
-        <p class="section-subtitle">Kenali saya lebih dekat</p>
-        <div class="about-grid">
-            <div class="about-image">
-                <img src="https://source.unsplash.com/600x600/?writer,desk,coffee" alt="About">
-            </div>
-            <div class="about-text">
-                <h3>Hazlar Space</h3>
-                <p>Saya adalah penulis lepas yang berbasis di Indonesia. Saya menulis artikel, novel, cerpen, esai, dan puisi.</p>
-                <p>Saya percaya bahwa setiap kata punya kekuatan. Tugas saya adalah membantu Anda menyampaikan pesan dengan indah dan tepat.</p>
-                <p><em>"Good stories make a better world."</em></p>
-            </div>
+        <div class="section-header fade-in">
+            <p class="section-eyebrow">01 — Tentang</p>
+            <h2 class="section-title">Siapa Saya</h2>
+            <p class="section-subtitle">Kenali saya lebih dekat</p>
+        </div>
+        <div class="about-content fade-in">
+            <p>Hazlar Space adalah nama pena saya. Saya menulis karena percaya bahwa kata-kata punya kekuatan untuk mengubah cara orang melihat dunia.</p>
+            <p>Saya menulis artikel, novel, cerpen, esai, dan puisi. Setiap tulisan adalah usaha untuk menyampaikan sesuatu yang jujur dan bermakna.</p>
+            <p>Saya percaya bahwa menulis bukan tentang menjadi sempurna, tapi tentang menjadi jujur.</p>
+            <p class="quote">"Menulis adalah cara saya berbicara ketika suara tidak cukup."</p>
         </div>
     </section>
 
     <!-- SERVICES -->
-    <div class="services-bg">
+    <div class="services-section">
         <section id="services">
-            <h2 class="section-title">Jasa Saya</h2>
-            <p class="section-subtitle">Apa yang bisa saya bantu</p>
-            <div class="services-grid">
+            <div class="section-header fade-in">
+                <p class="section-eyebrow">02 — Jasa</p>
+                <h2 class="section-title">Yang Saya Tawarkan</h2>
+                <p class="section-subtitle">Apa yang bisa saya bantu</p>
+            </div>
+            <div class="services-grid fade-in">
                 <div class="service-card">
-                    <img src="https://source.unsplash.com/600x400/?article,writing,blog" alt="Artikel">
-                    <div class="service-content">
-                        <h3>Artikel</h3>
-                        <p>Artikel blog, berita, opini, dan konten SEO-friendly.</p>
-                    </div>
+                    <div class="service-number">I</div>
+                    <h3>Artikel</h3>
+                    <p>Artikel blog, berita, opini, dan konten SEO-friendly. Ditulis dengan riset dan disampaikan dengan jelas.</p>
                 </div>
                 <div class="service-card">
-                    <img src="https://source.unsplash.com/600x400/?book,novel,reading" alt="Novel">
-                    <div class="service-content">
-                        <h3>Novel</h3>
-                        <p>Novel fiksi dengan plot mendalam. Tersedia ghostwriter.</p>
-                    </div>
+                    <div class="service-number">II</div>
+                    <h3>Novel</h3>
+                    <p>Novel fiksi dengan plot mendalam dan karakter yang hidup. Tersedia layanan ghostwriter profesional.</p>
                 </div>
                 <div class="service-card">
-                    <img src="https://source.unsplash.com/600x400/?story,paper,pen" alt="Cerpen">
-                    <div class="service-content">
-                        <h3>Cerpen</h3>
-                        <p>Cerita pendek dengan alur dan karakter yang kuat.</p>
-                    </div>
+                    <div class="service-number">III</div>
+                    <h3>Cerpen</h3>
+                    <p>Cerita pendek dengan alur yang kuat. Setiap kalimat punya tujuan, setiap adegan punya makna.</p>
                 </div>
                 <div class="service-card">
-                    <img src="https://source.unsplash.com/600x400/?essay,writing,study" alt="Esai">
-                    <div class="service-content">
-                        <h3>Esai</h3>
-                        <p>Esai akademik dan non-akademik dengan standar rapi.</p>
-                    </div>
+                    <div class="service-number">IV</div>
+                    <h3>Esai</h3>
+                    <p>Esai akademik dan non-akademik. Argumen yang rapi, gagasan yang kritis, dan bahasa yang jernih.</p>
                 </div>
                 <div class="service-card">
-                    <img src="https://source.unsplash.com/600x400/?poetry,flower,art" alt="Puisi">
-                    <div class="service-content">
-                        <h3>Puisi</h3>
-                        <p>Puisi dengan diksi indah dan makna mendalam.</p>
-                    </div>
+                    <div class="service-number">V</div>
+                    <h3>Puisi</h3>
+                    <p>Puisi dengan diksi yang dipilih dengan hati-hati. Tentang cinta, kehilangan, harapan, dan segala di antaranya.</p>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- GALLERY -->
-    <section id="gallery">
-        <h2 class="section-title">Galeri</h2>
-        <p class="section-subtitle">Suasana menulis</p>
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?typewriter,vintage" alt="Gallery"></div>
-            <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?books,library" alt="Gallery"></div>
-            <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?pen,ink,writing" alt="Gallery"></div>
-            <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?coffee,notebook" alt="Gallery"></div>
-            <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?desk,workspace" alt="Gallery"></div>
-            <div class="gallery-item"><img src="https://source.unsplash.com/400x400/?paper,letters" alt="Gallery"></div>
+    <!-- QUOTES -->
+    <section class="quotes-section">
+        <div class="quote-display fade-in" id="quoteDisplay">
+            "Kata-kata adalah jendela jiwa."
+        </div>
+        <p class="quote-author fade-in" id="quoteAuthor">— Hazlar Space</p>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item fade-in">
+                <span class="stat-number" data-target="50">0</span>
+                <span class="stat-label">Karya</span>
+            </div>
+            <div class="stat-item fade-in">
+                <span class="stat-number" data-target="30">0</span>
+                <span class="stat-label">Klien</span>
+            </div>
+            <div class="stat-item fade-in">
+                <span class="stat-number" data-target="5">0</span>
+                <span class="stat-label">Bidang</span>
+            </div>
+            <div class="stat-item fade-in">
+                <span class="stat-number" data-target="100">0</span>
+                <span class="stat-label">Persen Hati</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <div class="section-header fade-in">
+            <p class="section-eyebrow">03 — FAQ</p>
+            <h2 class="section-title">Pertanyaan Umum</h2>
+            <p class="section-subtitle">Yang sering ditanyakan</p>
+        </div>
+        <div class="faq-list fade-in">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Berapa lama proses pengerjaan?</div>
+                <div class="faq-answer">Tergantung jenis karya. Artikel: 1-3 hari. Cerpen: 3-7 hari. Novel: 1-3 bulan. Esai: 2-5 hari. Puisi: 1-2 hari.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Apakah bisa ghostwriter untuk novel?</div>
+                <div class="faq-answer">Ya. Saya menyediakan layanan ghostwriter profesional. Nama Anda akan tercantum sebagai penulis, dan kerahasiaan dijamin.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Bagaimana sistem pembayarannya?</div>
+                <div class="faq-answer">DP 50% di awal, 50% setelah selesai. Pembayaran via transfer bank atau e-wallet.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Apakah ada revisi?</div>
+                <div class="faq-answer">Ya, gratis 2x revisi. Revisi ke-3 dan seterusnya dikenakan biaya tambahan yang wajar.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">Apakah karya saya akan dijaga kerahasiaannya?</div>
+                <div class="faq-answer">Tentu. Kerahasiaan klien adalah prioritas. Saya tidak akan mempublikasikan karya Anda tanpa izin.</div>
+            </div>
         </div>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact">
-        <div class="contact">
-            <h2>Hubungi Saya</h2>
-            <p>Punya proyek kepenulisan? Saya siap membantu.</p>
-            <div class="contact-info">
-                <a href="https://wa.me/6281395067724" target="_blank">📱 0813-9506-7724</a>
-                <a href="mailto:hazlarspace@email.com">📧 hazlarspace@email.com</a>
+    <div class="contact-section">
+        <section id="contact">
+            <div class="section-header fade-in">
+                <p class="section-eyebrow">04 — Kontak</p>
+                <h2 class="section-title">Mari Bicara</h2>
+                <p class="section-subtitle">Punya proyek kepenulisan?</p>
             </div>
-            <a class="btn btn-primary" href="https://wa.me/6281395067724" target="_blank">💬 Chat WhatsApp</a>
-        </div>
-    </section>
+            <div class="contact-content fade-in">
+                <p>Saya siap membantu. Ceritakan proyek Anda, dan mari kita buat sesuatu yang bermakna bersama.</p>
+                <div class="contact-info">
+                    <a class="contact-item" href="https://wa.me/6281395067724" target="_blank">📱 0813-9506-7724</a>
+                    <a class="contact-item" href="mailto:hazlarspace@email.com">✉️ hazlarspace@email.com</a>
+                </div>
+                <a class="btn btn-primary" href="https://wa.me/6281395067724" target="_blank">Mulai Percakapan</a>
+            </div>
+        </section>
+    </div>
 
     <!-- FOOTER -->
     <footer>
-        <p>&copy; 2026 Hazlar Space — Penulis Lepas</p>
+        <p>&copy; 2026 Hazlar Space — Dibuat dengan kata-kata.</p>
     </footer>
 
     <!-- WA FLOAT -->
     <a class="wa-float" href="https://wa.me/6281395067724" target="_blank">💬</a>
 
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToSection('home')">↑</button>
+
     <script>
+        // ============ PRELOADER ============
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 800);
+        });
+
+        // ============ CUSTOM CURSOR ============
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        document.querySelectorAll('a, button, .service-card, .faq-question').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // ============ SCROLL PROGRESS ============
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const percent = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollProgress').style.width = percent + '%';
+
+            // Navbar
+            const nav = document.getElementById('navbar');
+            nav.classList.toggle('scrolled', scrollTop > 50);
+
+            // Back to top
+            const btn = document.getElementById('backToTop');
+            btn.classList.toggle('visible', scrollTop > 500);
+
+            // Active nav
+            updateActiveNav();
+        });
+
+        // ============ ACTIVE NAV ============
+        function updateActiveNav() {
+            const sections = ['home', 'about', 'services', 'faq', 'contact'];
+            let current = 'home';
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && window.scrollY >= el.offsetTop - 200) {
+                    current = id;
+                }
+            });
+            document.querySelectorAll('.nav-menu a').forEach(a => {
+                a.classList.toggle('active', a.dataset.section === current);
+            });
+        }
+
+        // ============ SCROLL TO SECTION ============
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('navMenu').classList.remove('active');
+            document.getElementById('hamburger').classList.remove('active');
         }
+
+        // ============ TOGGLE MENU ============
+        function toggleMenu() {
+            document.getElementById('navMenu').classList.toggle('active');
+            document.getElementById('hamburger').classList.toggle('active');
+        }
+
+        // ============ TYPING EFFECT ============
+        const typingTexts = [
+            'Menulis artikel yang mengalir...',
+            'Menulis cerita yang hidup...',
+            'Menulis puisi yang menyentuh...',
+            'Menulis esai yang tajam...',
+            'Menulis novel yang berkesan...'
+        ];
+        let typeIdx = 0, charIdx = 0, deleting = false;
+        const typingEl = document.getElementById('typing');
+
+        function type() {
+            const current = typingTexts[typeIdx];
+            typingEl.textContent = deleting 
+                ? current.substring(0, charIdx - 1)
+                : current.substring(0, charIdx + 1);
+            charIdx += deleting ? -1 : 1;
+
+            if (!deleting && charIdx === current.length) {
+                setTimeout(() => { deleting = true; type(); }, 2000);
+                return;
+            }
+            if (deleting && charIdx === 0) {
+                deleting = false;
+                typeIdx = (typeIdx + 1) % typingTexts.length;
+            }
+            setTimeout(type, deleting ? 30 : 70);
+        }
+        type();
+
+        // ============ FADE IN ============
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    if (entry.target.querySelector('.stat-number')) animateCounters();
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // ============ COUNTER ============
+        let counted = false;
+        function animateCounters() {
+            if (counted) return;
+            counted = true;
+            document.querySelectorAll('.stat-number').forEach(el => {
+                const target = +el.dataset.target;
+                let n = 0;
+                const step = target / 60;
+                const tick = () => {
+                    n += step;
+                    if (n < target) {
+                        el.textContent = Math.floor(n);
+                        requestAnimationFrame(tick);
+                    } else {
+                        el.textContent = target;
+                    }
+                };
+                tick();
+            });
+        }
+
+        // ============ FAQ ============
+        function toggleFaq(el) {
+            const item = el.parentElement;
+            document.querySelectorAll('.faq-item').forEach(i => {
+                if (i !== item) i.classList.remove('open');
+            });
+            item.classList.toggle('open');
+        }
+
+        // ============ QUOTES ROTATOR ============
+        const quotes = [
+            { text: '"Kata-kata adalah jendela jiwa."', author: '— Hazlar Space' },
+            { text: '"Menulis adalah cara berpikir dengan jari."', author: '— Hazlar Space' },
+            { text: '"Setiap cerita layak untuk diceritakan."', author: '— Hazlar Space' },
+            { text: '"Tulisan yang baik lahir dari kejujuran."', author: '— Hazlar Space' },
+            { text: '"Good stories make a better world."', author: '— Hazlar Space' }
+        ];
+        let quoteIdx = 0;
+        const quoteDisplay = document.getElementById('quoteDisplay');
+        const quoteAuthor = document.getElementById('quoteAuthor');
+
+        setInterval(() => {
+            quoteDisplay.style.opacity = '0';
+            setTimeout(() => {
+                quoteIdx = (quoteIdx + 1) % quotes.length;
+                quoteDisplay.textContent = quotes[quoteIdx].text;
+                quoteAuthor.textContent = quotes[quoteIdx].author;
+                quoteDisplay.style.opacity = '1';
+            }, 500);
+        }, 5000);
+        quoteDisplay.style.transition = 'opacity 0.5s';
+
+        // ============ PARALLAX HERO ============
+        window.addEventListener('scroll', () => {
+            const hero = document.querySelector('.hero-content');
+            if (hero && window.scrollY < window.innerHeight) {
+                hero.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+                hero.style.opacity = 1 - (window.scrollY / window.innerHeight);
+            }
+        });
+
+        // ============ TEXT SCRAMBLE ON HOVER ============
+        const scrambleChars = '!<>-_\\/[]{}—=+*^?#________';
+        document.querySelectorAll('.section-title').forEach(title => {
+            title.addEventListener('mouseenter', () => {
+                const original = title.textContent;
+                let iteration = 0;
+                const interval = setInterval(() => {
+                    title.textContent = original
+                        .split('')
+                        .map((char, idx) => {
+                            if (idx < iteration) return original[idx];
+                            return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+                        })
+                        .join('');
+                    if (iteration >= original.length) clearInterval(interval);
+                    iteration += 1 / 2;
+                }, 40);
+            });
+        });
     </script>
 
 </body>
