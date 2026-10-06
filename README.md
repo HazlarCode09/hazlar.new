@@ -1,0 +1,2 @@
+# hazlar.new
+blog pribadi
