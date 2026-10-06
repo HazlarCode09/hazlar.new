@@ -3,24 +3,611 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kezlar Blog</title>
+    <meta name="description" content="Hazlar New — Penulis Lepas Profesional. Jasa kepenulisan: artikel, cerpen, novel, jurnal.">
+    <title>Hazlar New — Penulis Lepas</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #0a0e27;
-            color: #e8ecf5;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #2ecc71;
+            --primary-dark: #27ae60;
+            --primary-light: #a8e6cf;
+            --text: #1a1a1a;
+            --text-light: #555;
+            --bg: #ffffff;
+            --bg-light: #f8fdf9;
+            --border: #e0f2e9;
+            --shadow: 0 4px 20px rgba(46, 204, 113, 0.1);
         }
-        h1 { color: #4a9eff; }
-        p { line-height: 1.6; }
-        a { color: #4a9eff; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* ============ NAVBAR ============ */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+        
+        .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--primary-dark);
+            cursor: pointer;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+        
+        .nav-menu a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+        
+        /* ============ HERO ============ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 20px 60px;
+            background: linear-gradient(135deg, #f8fdf9 0%, #e8f8f0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+            opacity: 0.3;
+            border-radius: 50%;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 60px;
+            font-weight: bold;
+            box-shadow: 0 10px 40px rgba(46, 204, 113, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--text);
+            line-height: 1.2;
+        }
+        
+        .hero h1 span { color: var(--primary); }
+        
+        .hero p {
+            font-size: 20px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-dark);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* ============ SECTION ============ */
+        section {
+            padding: 80px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 50px;
+            font-size: 18px;
+        }
+        
+        /* ============ ABOUT ============ */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .about-avatar {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 80px;
+            font-weight: bold;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+        }
+        
+        .about-text h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+        
+        .about-text p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        /* ============ SERVICES ============ */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .service-card {
+            background: var(--bg-light);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+        
+        .service-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .service-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+        }
+        
+        .service-card p {
+            color: var(--text-light);
+            font-size: 15px;
+        }
+        
+        /* ============ PORTFOLIO ============ */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .portfolio-card {
+            background: white;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .portfolio-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .portfolio-thumb {
+            height: 180px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+        
+        .portfolio-info {
+            padding: 20px;
+        }
+        
+        .portfolio-info h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .portfolio-info p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* ============ CONTACT ============ */
+        .contact {
+            background: var(--bg-light);
+            border-radius: 20px;
+            padding: 60px 30px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .contact h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .contact p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+        
+        .contact-item a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .contact-item a:hover {
+            color: var(--primary);
+        }
+        
+        /* ============ FOOTER ============ */
+        footer {
+            background: var(--text);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+        }
+        
+        footer p {
+            color: #ccc;
+            font-size: 14px;
+        }
+        
+        /* ============ ANIMATION ============ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 16px; }
+            .section-title { font-size: 28px; }
+            .about-content { grid-template-columns: 1fr; }
+            .about-avatar { width: 150px; height: 150px; font-size: 60px; }
+        }
+        
+        /* ============ BACK TO TOP ============ */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s;
+            border: none;
+            font-size: 20px;
+            box-shadow: var(--shadow);
+            z-index: 999;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+        }
+        
+        .back-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
     </style>
 </head>
 <body>
-    <h1>Kezlar Blog</h1>
-    <p>Blog pribadi Kezlar News.</p>
-    <p>Selamat datang! Ini blog pertama saya.</p>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo" onclick="scrollToSection('home')">
+                <div class="logo-icon">H</div>
+                <span>Hazlar New</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a onclick="scrollToSection('home')">Home</a></li>
+                <li><a onclick="scrollToSection('about')">Tentang</a></li>
+                <li><a onclick="scrollToSection('services')">Jasa</a></li>
+                <li><a onclick="scrollToSection('portfolio')">Portfolio</a></li>
+                <li><a onclick="scrollToSection('contact')">Kontak</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-logo">H</div>
+            <h1>Hazlar <span>New</span></h1>
+            <p>Penulis Lepas Profesional — Artikel, Cerpen, Novel, Jurnal</p>
+            <div class="hero-cta">
+                <a class="btn btn-primary" href="https://wa.me/6281395067724" target="_blank">📱 Hubungi Saya</a>
+                <a class="btn btn-outline" onclick="scrollToSection('services')">Lihat Jasa</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+        <h2 class="section-title fade-in">Tentang Saya</h2>
+        <p class="section-subtitle fade-in">Kenali saya lebih dekat</p>
+        <div class="about-content">
+            <div class="about-avatar fade-in">H</div>
+            <div class="about-text fade-in">
+                <h3>Hazlar New</h3>
+                <p>Saya adalah penulis lepas yang berbasis di Indonesia. Saya menulis artikel, cerpen, novel, dan jurnal dengan fokus pada kualitas dan keaslian.</p>
+                <p>Dengan pengalaman menulis, saya siap membantu Anda menyelesaikan proyek kepenulisan dengan hasil yang memuaskan.</p>
+                <p><strong>Moto saya:</strong> "Menulis adalah seni menyampaikan pesan dengan indah."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" style="background: var(--bg-light); max-width: 100%;">
+        <div style="max-width: 1100px; margin: 0 auto;">
+            <h2 class="section-title fade-in">Jasa Saya</h2>
+            <p class="section-subtitle fade-in">Apa yang bisa saya bantu</p>
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <div class="service-icon">📝</div>
+                    <h3>Artikel</h3>
+                    <p>Artikel blog, berita, opini, dan konten SEO-friendly untuk kebutuhan digital Anda.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">📖</div>
+                    <h3>Cerpen</h3>
+                    <p>Cerita pendek yang menarik dengan alur dan karakter yang kuat.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">📚</div>
+                    <h3>Novel</h3>
+                    <p>Novel fiksi dengan plot yang mendalam dan gaya penulisan yang memikat.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <div class="service-icon">📄</div>
+                    <h3>Jurnal</h3>
+                    <p>Jurnal akademik dan non-akademik dengan standar penulisan yang rapi.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio">
+        <h2 class="section-title fade-in">Portfolio</h2>
+        <p class="section-subtitle fade-in">Contoh karya saya</p>
+        <div class="portfolio-grid">
+            <div class="portfolio-card fade-in">
+                <div class="portfolio-thumb">📝</div>
+                <div class="portfolio-info">
+                    <h3>Artikel Teknologi</h3>
+                    <p>Artikel tentang perkembangan AI dan coding.</p>
+                </div>
+            </div>
+            <div class="portfolio-card fade-in">
+                <div class="portfolio-thumb">📖</div>
+                <div class="portfolio-info">
+                    <h3>Cerpen Kehidupan</h3>
+                    <p>Cerita pendek tentang perjuangan hidup.</p>
+                </div>
+            </div>
+            <div class="portfolio-card fade-in">
+                <div class="portfolio-thumb">📚</div>
+                <div class="portfolio-info">
+                    <h3>Novel Fantasi</h3>
+                    <p>Novel dengan dunia fantasi yang unik.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="contact fade-in">
+            <h2>Hubungi Saya</h2>
+            <p>Punya proyek kepenulisan? Saya siap membantu.</p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    📱 <a href="https://wa.me/6281395067724" target="_blank">0813-9506-7724</a>
+                </div>
+                <div class="contact-item">
+                    📧 <a href="mailto:hazlar@email.com">hazlar@email.com</a>
+                </div>
+            </div>
+            <a class="btn btn-primary" href="https://wa.me/6281395067724" target="_blank">💬 Chat WhatsApp</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Hazlar New — Penulis Lepas. Dibuat dengan ❤️</p>
+    </footer>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToSection('home')">↑</button>
+
+    <script>
+        // ============ SCROLL TO SECTION ============
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // ============ FADE IN ON SCROLL ============
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        
+        // ============ BACK TO TOP ============
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('backToTop');
+            if (window.scrollY > 500) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+    </script>
+
 </body>
 </html>
