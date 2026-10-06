@@ -3,29 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Hazlar New — Penulis Lepas Profesional. Jasa kepenulisan: artikel, cerpen, novel, jurnal.">
-    <title>Hazlar New — Penulis Lepas</title>
+    <meta name="description" content="Hazlar Space — Professional Freelance Writer. Articles, Novels, Short Stories, Essays, Poetry.">
+    <meta property="og:title" content="Hazlar Space — Professional Freelance Writer">
+    <meta property="og:description" content="Articles • Novels • Short Stories • Essays • Poetry">
+    <meta property="og:image" content="https://i.ibb.co.com/gMDRQDFg/file-000000001980820b98b36be1037dd611.png">
+    <title>Hazlar Space — Professional Freelance Writer</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --primary: #2ecc71;
-            --primary-dark: #27ae60;
-            --primary-light: #a8e6cf;
+            --primary: #1a4d2e;
+            --primary-light: #2d6a4f;
+            --gold: #c9a961;
+            --gold-light: #e8d5a3;
             --text: #1a1a1a;
-            --text-light: #555;
-            --bg: #ffffff;
-            --bg-light: #f8fdf9;
-            --border: #e0f2e9;
-            --shadow: 0 4px 20px rgba(46, 204, 113, 0.1);
+            --text-light: #666;
+            --bg: #fafaf7;
+            --bg-card: #ffffff;
+            --border: #e8e4d9;
+            --shadow: 0 4px 20px rgba(26, 77, 46, 0.08);
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            font-family: 'Georgia', 'Times New Roman', serif;
             color: var(--text);
             background: var(--bg);
-            line-height: 1.6;
+            line-height: 1.7;
             overflow-x: hidden;
+        }
+        
+        /* ============ PRELOADER ============ */
+        .preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+        
+        .preloader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .preloader-text {
+            font-size: 24px;
+            color: var(--primary);
+            letter-spacing: 4px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        /* ============ SCROLL PROGRESS ============ */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--gold));
+            z-index: 9998;
+            width: 0;
+            transition: width 0.1s;
         }
         
         /* ============ NAVBAR ============ */
@@ -33,15 +78,21 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(255,255,255,0.95);
+            background: rgba(250, 250, 247, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             z-index: 1000;
             padding: 15px 0;
+            transition: all 0.3s;
+        }
+        
+        nav.scrolled {
+            padding: 10px 0;
+            box-shadow: var(--shadow);
         }
         
         .nav-container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
             display: flex;
@@ -52,30 +103,25 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: bold;
-            font-size: 18px;
-            color: var(--primary-dark);
+            gap: 12px;
             cursor: pointer;
         }
         
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
+        .logo img {
+            height: 45px;
+            width: auto;
+        }
+        
+        .logo-text {
             font-size: 20px;
-            box-shadow: var(--shadow);
+            font-weight: bold;
+            color: var(--primary);
+            letter-spacing: 1px;
         }
         
         .nav-menu {
             display: flex;
-            gap: 25px;
+            gap: 30px;
             list-style: none;
         }
         
@@ -85,10 +131,43 @@
             font-size: 15px;
             transition: color 0.2s;
             cursor: pointer;
+            position: relative;
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
         }
         
         .nav-menu a:hover {
             color: var(--primary);
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--primary);
+            transition: all 0.3s;
         }
         
         /* ============ HERO ============ */
@@ -98,64 +177,70 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 100px 20px 60px;
-            background: linear-gradient(135deg, #f8fdf9 0%, #e8f8f0 100%);
+            padding: 120px 20px 60px;
+            background: linear-gradient(135deg, #fafaf7 0%, #f0f5f0 100%);
             position: relative;
             overflow: hidden;
         }
         
-        .hero::before {
-            content: '';
+        .particles {
             position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
-            opacity: 0.3;
-            border-radius: 50%;
+            inset: 0;
+            z-index: 0;
         }
         
         .hero-content {
-            max-width: 800px;
+            max-width: 900px;
             position: relative;
             z-index: 1;
         }
         
         .hero-logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 30px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 60px;
-            font-weight: bold;
-            box-shadow: 0 10px 40px rgba(46, 204, 113, 0.3);
-            animation: float 3s ease-in-out infinite;
+            height: 150px;
+            width: auto;
+            margin-bottom: 30px;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 10px 30px rgba(26, 77, 46, 0.2));
         }
         
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-15px); }
         }
         
         .hero h1 {
-            font-size: 48px;
+            font-size: 56px;
             margin-bottom: 20px;
-            color: var(--text);
+            color: var(--primary);
             line-height: 1.2;
+            letter-spacing: 2px;
         }
         
-        .hero h1 span { color: var(--primary); }
-        
-        .hero p {
-            font-size: 20px;
+        .hero .typing {
+            font-size: 22px;
             color: var(--text-light);
+            margin-bottom: 15px;
+            min-height: 33px;
+            font-style: italic;
+        }
+        
+        .hero .typing::after {
+            content: '|';
+            animation: blink 1s infinite;
+            color: var(--gold);
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .hero .services-text {
+            font-size: 16px;
+            color: var(--primary-light);
+            letter-spacing: 3px;
             margin-bottom: 40px;
+            text-transform: uppercase;
         }
         
         .hero-cta {
@@ -166,33 +251,36 @@
         }
         
         .btn {
-            padding: 15px 35px;
-            border-radius: 50px;
+            padding: 15px 40px;
+            border-radius: 0;
             text-decoration: none;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             transition: all 0.3s;
             display: inline-block;
             cursor: pointer;
-            border: none;
+            border: 2px solid transparent;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'Georgia', serif;
         }
         
         .btn-primary {
             background: var(--primary);
             color: white;
-            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+            border-color: var(--primary);
         }
         
         .btn-primary:hover {
-            background: var(--primary-dark);
+            background: var(--primary-light);
+            border-color: var(--primary-light);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
         }
         
         .btn-outline {
             background: transparent;
-            color: var(--primary-dark);
-            border: 2px solid var(--primary);
+            color: var(--primary);
+            border-color: var(--primary);
         }
         
         .btn-outline:hover {
@@ -200,93 +288,194 @@
             color: white;
         }
         
+        /* ============ BANNER SECTION ============ */
+        .banner-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            transform: translateY(-60px);
+        }
+        
+        .banner-section img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(26, 77, 46, 0.15);
+        }
+        
         /* ============ SECTION ============ */
         section {
             padding: 80px 20px;
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         
         .section-title {
-            font-size: 36px;
+            font-size: 42px;
             text-align: center;
             margin-bottom: 15px;
-            color: var(--text);
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 2px;
+            background: var(--gold);
+            margin: 20px auto;
         }
         
         .section-subtitle {
             text-align: center;
             color: var(--text-light);
-            margin-bottom: 50px;
+            margin-bottom: 60px;
             font-size: 18px;
+            font-style: italic;
         }
         
         /* ============ ABOUT ============ */
         .about-content {
             display: grid;
             grid-template-columns: 1fr 2fr;
-            gap: 40px;
+            gap: 60px;
             align-items: center;
         }
         
         .about-avatar {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 80px;
-            font-weight: bold;
             margin: 0 auto;
             box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 4px solid var(--gold);
+        }
+        
+        .about-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .about-text h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: var(--primary-dark);
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--primary);
         }
         
         .about-text p {
             color: var(--text-light);
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             font-size: 16px;
         }
         
+        /* ============ STATS ============ */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 30px 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--gold);
+        }
+        
+        .stat-number {
+            font-size: 42px;
+            color: var(--primary);
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+        
         /* ============ SERVICES ============ */
+        .services-section {
+            background: linear-gradient(135deg, #f0f5f0 0%, #fafaf7 100%);
+            max-width: 100%;
+            padding: 100px 20px;
+        }
+        
+        .services-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
         }
         
         .service-card {
-            background: var(--bg-light);
-            padding: 30px;
-            border-radius: 15px;
+            background: var(--bg-card);
+            padding: 40px 30px;
+            border-radius: 10px;
             border: 1px solid var(--border);
-            transition: all 0.3s;
+            transition: all 0.4s;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background: var(--gold);
+            transition: height 0.4s;
+        }
+        
+        .service-card:hover::before {
+            height: 100%;
         }
         
         .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-            border-color: var(--primary);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(26, 77, 46, 0.12);
+            border-color: var(--gold);
         }
         
         .service-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
         }
         
         .service-card h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: var(--primary-dark);
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            letter-spacing: 1px;
         }
         
         .service-card p {
@@ -297,39 +486,41 @@
         /* ============ PORTFOLIO ============ */
         .portfolio-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
         
         .portfolio-card {
-            background: white;
-            border-radius: 15px;
+            background: var(--bg-card);
+            border-radius: 10px;
             border: 1px solid var(--border);
             overflow: hidden;
-            transition: all 0.3s;
+            transition: all 0.4s;
         }
         
         .portfolio-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(26, 77, 46, 0.12);
         }
         
         .portfolio-thumb {
-            height: 180px;
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 60px;
+            font-size: 72px;
+            color: var(--gold);
         }
         
         .portfolio-info {
-            padding: 20px;
+            padding: 25px;
         }
         
         .portfolio-info h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--primary);
         }
         
         .portfolio-info p {
@@ -337,91 +528,253 @@
             font-size: 14px;
         }
         
-        /* ============ CONTACT ============ */
-        .contact {
-            background: var(--bg-light);
-            border-radius: 20px;
-            padding: 60px 30px;
-            text-align: center;
-            max-width: 700px;
+        /* ============ TESTIMONIALS ============ */
+        .testimonials-section {
+            background: linear-gradient(135deg, #f0f5f0 0%, #fafaf7 100%);
+            max-width: 100%;
+            padding: 100px 20px;
+        }
+        
+        .testimonials-inner {
+            max-width: 900px;
             margin: 0 auto;
         }
         
-        .contact h2 {
-            font-size: 32px;
+        .testimonial-card {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            text-align: center;
+            display: none;
+        }
+        
+        .testimonial-card.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .testimonial-text {
+            font-size: 18px;
+            font-style: italic;
+            color: var(--text);
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+        
+        .testimonial-author {
+            font-size: 16px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .testimonial-role {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .testimonial-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dot.active {
+            background: var(--gold);
+            transform: scale(1.3);
+        }
+        
+        /* ============ FAQ ============ */
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .faq-question {
+            padding: 25px 30px;
+            font-size: 18px;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .faq-question::after {
+            content: '+';
+            font-size: 28px;
+            color: var(--gold);
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.open .faq-question::after {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s;
+            padding: 0 30px;
+            color: var(--text-light);
+        }
+        
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+            padding: 0 30px 25px;
+        }
+        
+        /* ============ CONTACT ============ */
+        .contact {
+            background: var(--primary);
+            border-radius: 15px;
+            padding: 80px 40px;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .contact::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+        
+        .contact h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            color: white;
         }
         
         .contact p {
-            color: var(--text-light);
-            margin-bottom: 30px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+            font-size: 18px;
         }
         
         .contact-info {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 20px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
         }
         
         .contact-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             font-size: 18px;
         }
         
         .contact-item a {
-            color: var(--primary-dark);
+            color: var(--gold-light);
             text-decoration: none;
             font-weight: bold;
+            transition: color 0.3s;
         }
         
         .contact-item a:hover {
+            color: white;
+        }
+        
+        .contact .btn-primary {
+            background: var(--gold);
             color: var(--primary);
+            border-color: var(--gold);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .contact .btn-primary:hover {
+            background: var(--gold-light);
+            border-color: var(--gold-light);
         }
         
         /* ============ FOOTER ============ */
         footer {
-            background: var(--text);
+            background: var(--primary);
             color: white;
             text-align: center;
-            padding: 30px 20px;
-            margin-top: 60px;
+            padding: 40px 20px;
+            margin-top: 80px;
         }
         
         footer p {
-            color: #ccc;
+            color: rgba(255,255,255,0.7);
             font-size: 14px;
         }
         
-        /* ============ ANIMATION ============ */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s, transform 0.6s;
+        footer .footer-logo {
+            height: 60px;
+            margin-bottom: 20px;
         }
         
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        /* ============ WHATSAPP FLOAT ============ */
+        .wa-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+            transition: all 0.3s;
+            text-decoration: none;
         }
         
-        /* ============ RESPONSIVE ============ */
-        @media (max-width: 768px) {
-            .nav-menu { display: none; }
-            .hero h1 { font-size: 32px; }
-            .hero p { font-size: 16px; }
-            .section-title { font-size: 28px; }
-            .about-content { grid-template-columns: 1fr; }
-            .about-avatar { width: 150px; height: 150px; font-size: 60px; }
+        .wa-float:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.5);
         }
         
         /* ============ BACK TO TOP ============ */
         .back-to-top {
             position: fixed;
-            bottom: 30px;
+            bottom: 100px;
             right: 30px;
             width: 50px;
             height: 50px;
@@ -445,36 +798,120 @@
         }
         
         .back-to-top:hover {
-            background: var(--primary-dark);
+            background: var(--primary-light);
             transform: translateY(-3px);
+        }
+        
+        /* ============ ANIMATION ============ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: var(--bg);
+                flex-direction: column;
+                padding: 40px;
+                gap: 25px;
+                transition: left 0.3s;
+                border-top: 1px solid var(--border);
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu a {
+                font-size: 20px;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .hero h1 { font-size: 36px; }
+            .hero .typing { font-size: 18px; }
+            .section-title { font-size: 32px; }
+            .about-content { grid-template-columns: 1fr; gap: 40px; }
+            .about-avatar { width: 200px; height: 200px; }
+            .contact h2 { font-size: 32px; }
+            .contact { padding: 60px 25px; }
+            .banner-section { transform: translateY(-30px); }
+        }
+        
+        /* ============ CUSTOM SCROLLBAR ============ */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
         }
     </style>
 </head>
 <body>
 
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-text">HAZLAR SPACE</div>
+    </div>
+
+    <!-- SCROLL PROGRESS -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- NAVBAR -->
-    <nav>
+    <nav id="navbar">
         <div class="nav-container">
             <div class="logo" onclick="scrollToSection('home')">
-                <div class="logo-icon">H</div>
-                <span>Hazlar New</span>
+                <img src="https://i.ibb.co.com/MDvSy1xK/file-00000000146c81fab01436f33e07c8ee.png" alt="Hazlar Space">
+                <span class="logo-text">HAZLAR SPACE</span>
             </div>
-            <ul class="nav-menu">
+            <ul class="nav-menu" id="navMenu">
                 <li><a onclick="scrollToSection('home')">Home</a></li>
                 <li><a onclick="scrollToSection('about')">Tentang</a></li>
                 <li><a onclick="scrollToSection('services')">Jasa</a></li>
                 <li><a onclick="scrollToSection('portfolio')">Portfolio</a></li>
+                <li><a onclick="scrollToSection('faq')">FAQ</a></li>
                 <li><a onclick="scrollToSection('contact')">Kontak</a></li>
             </ul>
+            <button class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
     <!-- HERO -->
     <section class="hero" id="home">
+        <canvas class="particles" id="particles"></canvas>
         <div class="hero-content">
-            <div class="hero-logo">H</div>
-            <h1>Hazlar <span>New</span></h1>
-            <p>Penulis Lepas Profesional — Artikel, Cerpen, Novel, Jurnal</p>
+            <img class="hero-logo" src="https://i.ibb.co.com/MDvSy1xK/file-00000000146c81fab01436f33e07c8ee.png" alt="Hazlar Space Logo">
+            <h1>HAZLAR SPACE</h1>
+            <p class="typing" id="typing"></p>
+            <p class="services-text">Articles • Novels • Short Stories • Essays • Poetry</p>
             <div class="hero-cta">
                 <a class="btn btn-primary" href="https://wa.me/6281395067724" target="_blank">📱 Hubungi Saya</a>
                 <a class="btn btn-outline" onclick="scrollToSection('services')">Lihat Jasa</a>
@@ -482,46 +919,78 @@
         </div>
     </section>
 
+    <!-- BANNER -->
+    <div class="banner-section fade-in">
+        <img src="https://i.ibb.co.com/gMDRQDFg/file-000000001980820b98b36be1037dd611.png" alt="Hazlar Space Banner">
+    </div>
+
     <!-- ABOUT -->
     <section id="about">
         <h2 class="section-title fade-in">Tentang Saya</h2>
         <p class="section-subtitle fade-in">Kenali saya lebih dekat</p>
         <div class="about-content">
-            <div class="about-avatar fade-in">H</div>
+            <div class="about-avatar fade-in">
+                <img src="https://i.ibb.co.com/MDvSy1xK/file-00000000146c81fab01436f33e07c8ee.png" alt="Hazlar Space">
+            </div>
             <div class="about-text fade-in">
-                <h3>Hazlar New</h3>
-                <p>Saya adalah penulis lepas yang berbasis di Indonesia. Saya menulis artikel, cerpen, novel, dan jurnal dengan fokus pada kualitas dan keaslian.</p>
-                <p>Dengan pengalaman menulis, saya siap membantu Anda menyelesaikan proyek kepenulisan dengan hasil yang memuaskan.</p>
-                <p><strong>Moto saya:</strong> "Menulis adalah seni menyampaikan pesan dengan indah."</p>
+                <h3>Hazlar Space</h3>
+                <p>Saya adalah penulis lepas profesional yang berbasis di Indonesia. Saya menulis artikel, novel (termasuk ghostwriter), cerpen, esai, dan puisi dengan fokus pada kualitas, keaslian, dan keindahan bahasa.</p>
+                <p>Dengan pengalaman menulis, saya siap membantu Anda menyelesaikan proyek kepenulisan dengan hasil yang memuaskan dan tepat waktu.</p>
+                <p><em>"Good stories make a better world."</em></p>
+            </div>
+        </div>
+        
+        <!-- STATS -->
+        <div class="stats">
+            <div class="stat-item fade-in">
+                <span class="stat-number" data-target="50">0</span>
+                <span class="stat-label">Proyek</span>
+            </div>
+            <div class="stat-item fade-in">
+                <span class="stat-number" data-target="30">0</span>
+                <span class="stat-label">Klien</span>
+            </div>
+            <div class="stat-item fade-in">
+                <span class="stat-number" data-target="100">0</span>
+                <span class="stat-label">Karya</span>
+            </div>
+            <div class="stat-item fade-in">
+                <span class="stat-number" data-target="5">0</span>
+                <span class="stat-label">Tahun</span>
             </div>
         </div>
     </section>
 
     <!-- SERVICES -->
-    <section id="services" style="background: var(--bg-light); max-width: 100%;">
-        <div style="max-width: 1100px; margin: 0 auto;">
+    <section class="services-section" id="services">
+        <div class="services-inner">
             <h2 class="section-title fade-in">Jasa Saya</h2>
             <p class="section-subtitle fade-in">Apa yang bisa saya bantu</p>
             <div class="services-grid">
                 <div class="service-card fade-in">
-                    <div class="service-icon">📝</div>
+                    <span class="service-icon">📝</span>
                     <h3>Artikel</h3>
                     <p>Artikel blog, berita, opini, dan konten SEO-friendly untuk kebutuhan digital Anda.</p>
                 </div>
                 <div class="service-card fade-in">
-                    <div class="service-icon">📖</div>
-                    <h3>Cerpen</h3>
-                    <p>Cerita pendek yang menarik dengan alur dan karakter yang kuat.</p>
-                </div>
-                <div class="service-card fade-in">
-                    <div class="service-icon">📚</div>
+                    <span class="service-icon">📚</span>
                     <h3>Novel</h3>
-                    <p>Novel fiksi dengan plot yang mendalam dan gaya penulisan yang memikat.</p>
+                    <p>Novel fiksi dengan plot mendalam. Tersedia layanan ghostwriter profesional.</p>
                 </div>
                 <div class="service-card fade-in">
-                    <div class="service-icon">📄</div>
-                    <h3>Jurnal</h3>
-                    <p>Jurnal akademik dan non-akademik dengan standar penulisan yang rapi.</p>
+                    <span class="service-icon">📖</span>
+                    <h3>Cerpen</h3>
+                    <p>Cerita pendek dengan alur dan karakter yang kuat, menyentuh hati pembaca.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">📄</span>
+                    <h3>Esai</h3>
+                    <p>Esai akademik dan non-akademik dengan standar penulisan yang rapi dan kritis.</p>
+                </div>
+                <div class="service-card fade-in">
+                    <span class="service-icon">🌸</span>
+                    <h3>Puisi</h3>
+                    <p>Puisi dengan diksi indah dan makna mendalam, cocok untuk berbagai acara.</p>
                 </div>
             </div>
         </div>
@@ -536,23 +1005,81 @@
                 <div class="portfolio-thumb">📝</div>
                 <div class="portfolio-info">
                     <h3>Artikel Teknologi</h3>
-                    <p>Artikel tentang perkembangan AI dan coding.</p>
+                    <p>Artikel tentang perkembangan AI, coding, dan teknologi terkini.</p>
                 </div>
             </div>
             <div class="portfolio-card fade-in">
                 <div class="portfolio-thumb">📖</div>
                 <div class="portfolio-info">
                     <h3>Cerpen Kehidupan</h3>
-                    <p>Cerita pendek tentang perjuangan hidup.</p>
+                    <p>Cerita pendek tentang perjuangan, cinta, dan harapan.</p>
                 </div>
             </div>
             <div class="portfolio-card fade-in">
                 <div class="portfolio-thumb">📚</div>
                 <div class="portfolio-info">
                     <h3>Novel Fantasi</h3>
-                    <p>Novel dengan dunia fantasi yang unik.</p>
+                    <p>Novel dengan dunia fantasi yang unik dan plot berliku.</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials-section">
+        <div class="testimonials-inner">
+            <h2 class="section-title fade-in">Testimoni</h2>
+            <p class="section-subtitle fade-in">Kata klien saya</p>
+            
+            <div class="testimonial-card active fade-in">
+                <p class="testimonial-text">"Hazlar Space menulis artikel yang sangat berkualitas. SEO-friendly dan tepat waktu. Recommended!"</p>
+                <p class="testimonial-author">Budi Santoso</p>
+                <p class="testimonial-role">CEO Startup Teknologi</p>
+            </div>
+            
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-text">"Novel yang ditulis sangat menarik. Plotnya kuat dan karakter-karakternya hidup. Terima kasih!"</p>
+                <p class="testimonial-author">Sari Dewi</p>
+                <p class="testimonial-role">Penerbit Buku</p>
+            </div>
+            
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-text">"Puisi yang dibuat sangat indah. Diksi-diksinya tepat dan menyentuh. Saya puas!"</p>
+                <p class="testimonial-author">Rina Putri</p>
+                <p class="testimonial-role">Event Organizer</p>
+            </div>
+            
+            <div class="testimonial-dots">
+                <span class="dot active" onclick="showTestimonial(0)"></span>
+                <span class="dot" onclick="showTestimonial(1)"></span>
+                <span class="dot" onclick="showTestimonial(2)"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <h2 class="section-title fade-in">FAQ</h2>
+        <p class="section-subtitle fade-in">Pertanyaan yang sering ditanya</p>
+        
+        <div class="faq-item fade-in">
+            <div class="faq-question" onclick="toggleFaq(this)">Berapa lama proses pengerjaan?</div>
+            <div class="faq-answer">Tergantung jenis karya. Artikel: 1-3 hari. Cerpen: 3-7 hari. Novel: 1-3 bulan. Esai: 2-5 hari. Puisi: 1-2 hari.</div>
+        </div>
+        
+        <div class="faq-item fade-in">
+            <div class="faq-question" onclick="toggleFaq(this)">Apakah bisa ghostwriter untuk novel?</div>
+            <div class="faq-answer">Ya! Saya menyediakan layanan ghostwriter profesional untuk novel. Nama Anda akan tercantum sebagai penulis.</div>
+        </div>
+        
+        <div class="faq-item fade-in">
+            <div class="faq-question" onclick="toggleFaq(this)">Bagaimana sistem pembayarannya?</div>
+            <div class="faq-answer">DP 50% di awal, 50% setelah selesai. Pembayaran via transfer bank atau e-wallet.</div>
+        </div>
+        
+        <div class="faq-item fade-in">
+            <div class="faq-question" onclick="toggleFaq(this)">Apakah ada revisi?</div>
+            <div class="faq-answer">Ya, gratis 2x revisi. Revisi ke-3 dan seterusnya dikenakan biaya tambahan.</div>
         </div>
     </section>
 
@@ -566,7 +1093,7 @@
                     📱 <a href="https://wa.me/6281395067724" target="_blank">0813-9506-7724</a>
                 </div>
                 <div class="contact-item">
-                    📧 <a href="mailto:hazlar@email.com">hazlar@email.com</a>
+                    📧 <a href="mailto:hazlarspace@email.com">hazlarspace@email.com</a>
                 </div>
             </div>
             <a class="btn btn-primary" href="https://wa.me/6281395067724" target="_blank">💬 Chat WhatsApp</a>
@@ -575,16 +1102,70 @@
 
     <!-- FOOTER -->
     <footer>
-        <p>&copy; 2026 Hazlar New — Penulis Lepas. Dibuat dengan ❤️</p>
+        <img class="footer-logo" src="https://i.ibb.co.com/MDvSy1xK/file-00000000146c81fab01436f33e07c8ee.png" alt="Hazlar Space">
+        <p>&copy; 2026 Hazlar Space — Professional Freelance Writer. Dibuat dengan ❤️</p>
     </footer>
+
+    <!-- WHATSAPP FLOAT -->
+    <a class="wa-float" href="https://wa.me/6281395067724" target="_blank">💬</a>
 
     <!-- BACK TO TOP -->
     <button class="back-to-top" id="backToTop" onclick="scrollToSection('home')">↑</button>
 
     <script>
+        // ============ PRELOADER ============
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 800);
+        });
+        
+        // ============ TYPING EFFECT ============
+        const typingTexts = [
+            'Professional Freelance Writer',
+            'Articles • Novels • Short Stories',
+            'Essays • Poetry',
+            'Good stories make a better world'
+        ];
+        let typingIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingEl = document.getElementById('typing');
+        
+        function type() {
+            const current = typingTexts[typingIndex];
+            
+            if (isDeleting) {
+                typingEl.textContent = current.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingEl.textContent = current.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            
+            if (!isDeleting && charIndex === current.length) {
+                setTimeout(() => { isDeleting = true; type(); }, 2000);
+                return;
+            }
+            
+            if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                typingIndex = (typingIndex + 1) % typingTexts.length;
+            }
+            
+            setTimeout(type, isDeleting ? 50 : 100);
+        }
+        type();
+        
         // ============ SCROLL TO SECTION ============
         function scrollToSection(id) {
             document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('navMenu').classList.remove('active');
+        }
+        
+        // ============ TOGGLE MENU ============
+        function toggleMenu() {
+            document.getElementById('navMenu').classList.toggle('active');
         }
         
         // ============ FADE IN ON SCROLL ============
@@ -592,21 +1173,136 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    
+                    // Counter animation
+                    if (entry.target.querySelector('.stat-number')) {
+                        animateCounters();
+                    }
                 }
             });
         }, { threshold: 0.1 });
         
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
         
-        // ============ BACK TO TOP ============
+        // ============ COUNTER ANIMATION ============
+        let countersAnimated = false;
+        function animateCounters() {
+            if (countersAnimated) return;
+            countersAnimated = true;
+            
+            document.querySelectorAll('.stat-number').forEach(counter => {
+                const target = parseInt(counter.dataset.target);
+                let current = 0;
+                const increment = target / 50;
+                
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.textContent = Math.floor(current) + '+';
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target + '+';
+                    }
+                };
+                updateCounter();
+            });
+        }
+        
+        // ============ SCROLL PROGRESS & NAVBAR ============
         window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            
+            document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+            
+            const nav = document.getElementById('navbar');
+            if (scrollTop > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+            
             const btn = document.getElementById('backToTop');
-            if (window.scrollY > 500) {
+            if (scrollTop > 500) {
                 btn.classList.add('visible');
             } else {
                 btn.classList.remove('visible');
             }
         });
+        
+        // ============ TESTIMONIALS ============
+        let currentTestimonial = 0;
+        const testimonials = document.querySelectorAll('.testimonial-card');
+        const dots = document.querySelectorAll('.dot');
+        
+        function showTestimonial(index) {
+            testimonials.forEach(t => t.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            
+            testimonials[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentTestimonial = index;
+        }
+        
+        // Auto slide
+        setInterval(() => {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            showTestimonial(currentTestimonial);
+        }, 5000);
+        
+        // ============ FAQ ============
+        function toggleFaq(el) {
+            const item = el.parentElement;
+            item.classList.toggle('open');
+        }
+        
+        // ============ PARTICLES ============
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        const particles = [];
+        const particleCount = 40;
+        
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 1,
+                speedX: Math.random() * 0.5 - 0.25,
+                speedY: Math.random() * 0.5 - 0.25,
+                opacity: Math.random() * 0.5 + 0.2
+            });
+        }
+        
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(201, 169, 97, ${p.opacity})`;
+                ctx.fill();
+            });
+            
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
     </script>
 
 </body>
